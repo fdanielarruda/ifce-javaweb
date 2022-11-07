@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>Acadêmico</title>
+</head>
+
+<body>
+	<a th:href="@{/}">Index</a>
+	
+	<h1>Alunos:</h1>
+	
+	<table>
+		<tr>
+			<th>Id</th>
+			<th>Nome</th>
+			<th>Matrícula</th>
+			<th>Curso</th>
+		</tr>
+		
+		<tr th:each="aluno: ${alunos}" th:object="${aluno}">
+			<td th:text="*{id}"></td>
+			<td th:text="*{nome}"></td>
+			<td th:text="*{matricula}"></td>
+			<td th:text="*{curso.nome}"></td>
+			<td><a href="">Boletim</a></td>
+			<td><a href="">Editar</a></td>
+		</tr>
+	</table>
+</body>
+
+</html>
