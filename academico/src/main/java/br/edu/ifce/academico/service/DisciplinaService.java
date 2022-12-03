@@ -19,4 +19,15 @@ public class DisciplinaService {
 		return d;
 	}
 	
+	public Disciplina consultar(Long id) {
+		return disciplinaRepository.findById(id).get();
+	}
+	
+	public List<Disciplina> consultarStatus(Boolean status) {
+		return disciplinaRepository.findByStatus(status);
+	}
+	
+	public void salvarDisciplina(Disciplina disciplina) {
+		disciplinaRepository.save(disciplina);
+	}	
 }

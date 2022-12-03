@@ -23,11 +23,12 @@ public class CursoService {
 		return cursos;
 	}
 	
-	public void salvarCurso(String nome) {
-		Curso c = new Curso();
-		c.setNome(nome);
-		cursoRepository.save(c);
-		
-		System.out.println("Curso Cadastrado");
+	public void salvarCurso(Curso curso) {
+		cursoRepository.save(curso);
+	}
+	
+	public void deletarCurso(Long id) {
+		Curso c = cursoRepository.findById(id).get();
+		cursoRepository.delete(c);
 	}
 }

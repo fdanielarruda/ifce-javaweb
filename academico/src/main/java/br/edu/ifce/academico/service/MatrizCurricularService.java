@@ -24,4 +24,12 @@ public class MatrizCurricularService {
 		return _c.getMatrizCurricular();
 	}
 	
+	public MatrizCurricular consultarMatriz(Long matriz_id) {
+		return matrizRepository.findById(matriz_id).get();
+	}
+	
+	public void salvarMatriz(MatrizCurricular matriz) {
+		matrizRepository.save(matriz);
+	}
+	
 }

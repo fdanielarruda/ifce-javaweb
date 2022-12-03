@@ -36,6 +36,10 @@ public class MatrizCurricular {
 			inverseJoinColumns = @JoinColumn(name = "disciplina_id"))
 	private List<Disciplina> disciplinas;
 	
+	public MatrizCurricular() {
+		this.status = true;
+	}
+	
 	public Long getId() {
 		return id;
 	}
@@ -74,5 +78,13 @@ public class MatrizCurricular {
 
 	public void setCurso(Curso curso) {
 		this.curso = curso;
+	}
+
+	public List<Disciplina> getDisciplinas() {
+		return disciplinas;
+	}
+
+	public void setDisciplinas(List<Disciplina> disciplinas) {
+		this.disciplinas = disciplinas;
 	}
 }

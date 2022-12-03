@@ -21,6 +21,12 @@ public class Disciplina {
 	@ManyToMany(mappedBy = "disciplinas")
 	private List<MatrizCurricular> matrizCurricular;
 	
+	private Boolean status;
+	
+	public Disciplina() {
+		this.status = true;
+	}
+	
 	public Long getId() {
 		return id;
 	}
@@ -43,5 +49,13 @@ public class Disciplina {
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+
+	public Boolean getStatus() {
+		return status;
+	}
+
+	public void setStatus(Boolean status) {
+		this.status = status;
 	}
 }
