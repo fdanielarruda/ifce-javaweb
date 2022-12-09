@@ -14,13 +14,11 @@ public class CursoService {
 	CursoRepository cursoRepository;
 
 	public Curso consultar(Long id) {
-		Curso c = cursoRepository.findById(id).get();
-		return c;
+		return cursoRepository.findById(id).get();
 	}
 	
 	public List<Curso> listarCursos() {
-		List<Curso> cursos = cursoRepository.findAll();
-		return cursos;
+		return cursoRepository.findAll();
 	}
 	
 	public void salvarCurso(Curso curso) {

@@ -56,8 +56,16 @@ public class Turma {
 		return disciplina;
 	}
 
+	public void setDisciplina(Disciplina disciplina) {
+		this.disciplina = disciplina;
+	}
+
 	public Professor getProfessor() {
 		return professor;
+	}
+
+	public void setProfessor(Professor professor) {
+		this.professor = professor;
 	}
 
 	public List<Aluno> getAlunos() {

@@ -64,7 +64,7 @@ public class MatrizCurricular {
 		this.dataMatriz = dataMatriz;
 	}
 
-	public boolean isStatus() {
+	public boolean getStatus() {
 		return status;
 	}
 

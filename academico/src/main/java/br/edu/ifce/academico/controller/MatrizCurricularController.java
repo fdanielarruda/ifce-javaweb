@@ -1,11 +1,13 @@
 package br.edu.ifce.academico.controller;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,6 +36,9 @@ public class MatrizCurricularController {
 	
 	@Autowired
 	DisciplinaService disciplinaService;
+	
+	@Autowired
+	MatrizCurricularService matrizCurricularService;
 	
 	@GetMapping("/cursos/{curso_id}/matrizes")
 	public String listMatrizByCursos(Model model, @PathVariable(value = "curso_id") Long curso_id) {
@@ -127,5 +132,33 @@ public class MatrizCurricularController {
 		model.addAttribute("curso", curso);
 		
 		return "matrizes/detalhes";
+	}
+	
+	//////////////////ROTAS APENAS PARA CONSULTA FORA DO TH //////////////////
+	@GetMapping("/app/matrizes")
+	public ResponseEntity<List<MatrizCurricularDto>> appMatrizes(@RequestParam("curso_id") Long curso_id) {
+		Curso c = cursoService.consultar(curso_id);
+		List<MatrizCurricularDto> matrizes = new ArrayList<MatrizCurricularDto>();
+		
+		for (int i=0; i<c.getMatrizCurricular().size(); i++) {
+			MatrizCurricular mc = c.getMatrizCurricular().get(i);
+			
+			if (mc.getStatus()) {	
+				MatrizCurricularDto mcd = new MatrizCurricularDto();
+				
+				mcd.setId(mc.getId());
+				mcd.setCodigo(mc.getCodigo());
+				mcd.setTodasDisciplinas(mc.getDisciplinas());
+				
+				DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		        String dataFormatada = dateFormat.format(mc.getDataMatriz());
+		        
+				mcd.setDataMatriz(dataFormatada);
+				
+				matrizes.add(mcd);
+			}
+		}
+		
+		return ResponseEntity.ok(matrizes);
 	}
 }

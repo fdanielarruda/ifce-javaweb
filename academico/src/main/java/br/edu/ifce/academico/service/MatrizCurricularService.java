@@ -31,5 +31,4 @@ public class MatrizCurricularService {
 	public void salvarMatriz(MatrizCurricular matriz) {
 		matrizRepository.save(matriz);
 	}
-	
 }

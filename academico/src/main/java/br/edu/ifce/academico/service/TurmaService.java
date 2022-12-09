@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.edu.ifce.academico.model.Aluno;
 import br.edu.ifce.academico.model.Turma;
 import br.edu.ifce.academico.repository.TurmaRepository;
 
@@ -15,13 +16,42 @@ public class TurmaService {
 	TurmaRepository turmaRepository;
 	
 	public List<Turma> listarTurmas() {
-		List<Turma> t = turmaRepository.findAll();
-		return t;
+		return turmaRepository.findAll();
 	}
 	
 	public Turma consultarTurma(Long id) {
-		Turma t = turmaRepository.findById(id).get();
-		return t;
+		return turmaRepository.findById(id).get();
 	}
 	
+	public void deletarTurma(Turma turma) {
+		turmaRepository.delete(turma);
+	}
+	
+	public void salvarTurma(Turma turma) {
+		turmaRepository.save(turma);
+	}
+	
+	public void adicionarAluno(Turma turma, Aluno aluno) {
+		List<Aluno> alunos_atuais = turma.getAlunos();
+		alunos_atuais.add(aluno);
+		
+		turma.setAlunos(alunos_atuais);
+		
+		turmaRepository.save(turma);
+	}
+	
+	public void removerAluno(Turma turma, Aluno aluno) {
+		List<Aluno> alunos_atuais = turma.getAlunos();
+
+		for (Aluno a: alunos_atuais) {
+			if (a.getId().equals(aluno.getId())) {
+				alunos_atuais.remove(a);
+				break;
+			}
+		}
+		
+		turma.setAlunos(alunos_atuais);
+		
+		turmaRepository.save(turma);
+	}
 }

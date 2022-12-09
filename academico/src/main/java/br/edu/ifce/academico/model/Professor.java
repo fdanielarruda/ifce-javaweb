@@ -14,6 +14,12 @@ public class Professor {
 	private String matricula;
 	
 	private String nome;
+	
+	private Boolean status;
+	
+	public Professor() {
+		this.status = true;
+	}
 
 	public Long getId() {
 		return id;
@@ -37,5 +43,13 @@ public class Professor {
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+
+	public Boolean getStatus() {
+		return status;
+	}
+
+	public void setStatus(Boolean status) {
+		this.status = status;
 	}
 }

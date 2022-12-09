@@ -15,8 +15,7 @@ public class DisciplinaService {
 	DisciplinaRepository disciplinaRepository;
 	
 	public List<Disciplina> listarDisciplinas() {
-		List<Disciplina> d = disciplinaRepository.findAll();
-		return d;
+		return disciplinaRepository.findAll();
 	}
 	
 	public Disciplina consultar(Long id) {

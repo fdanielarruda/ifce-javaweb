@@ -15,8 +15,22 @@ public class AlunoService {
 	AlunoRepository alunoRepository;
 	
 	public List<Aluno> listarAlunos() {
-		List<Aluno> a = alunoRepository.findAll();
-		return a;
+		return alunoRepository.findAll();
 	}
 	
+	public List<Aluno> listarAlunosPorNomeOuMatricula(String pesquisa) { 
+		return alunoRepository.findByNomeContainingOrMatriculaContaining(pesquisa, pesquisa);
+	}
+	
+	public Aluno consultarAluno(Long id_aluno) {
+		return alunoRepository.findById(id_aluno).get();
+	}
+	
+	public void salvarAluno(Aluno aluno) {
+		alunoRepository.save(aluno);
+	}
+	
+	public void removerAluno(Aluno aluno) {
+		alunoRepository.delete(aluno);
+	}
 }
