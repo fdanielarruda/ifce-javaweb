@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	layout:decorate="~{fragmentos/template}"
+>
+<head></head>
+
+<body>
+	<div class="card shadow" layout:fragment="corpo_pagina">
+    	<div class="card-header font-weight-bold">CURSOS</div>
+                	
+   		<div class="card-body">
+       		<a th:href="@{'/cursos/cadastrar'}" class="btn btn-success btn-sm mb-3 font-weight-bold">
+				<i class="fas fa-plus"></i> Novo Curso
+			</a>
+	                		
+	        <table class="table table-sm text-center">
+				<thead>
+					<tr>
+						<th>Id</th>
+						<th class="text-left">Nome</th>
+						<th>Ações</th>
+					</tr>
+				</thead>
+				
+				<tbody>
+					<tr th:each="curso: ${cursos}">
+						<td th:text="${curso.id}"></td>
+						<td th:text="${curso.nome}" class="text-left"></td>
+						<td>
+							<a th:href="@{'/cursos/' + ${curso.id}} + '/editar'" class="btn btn-warning btn-sm" title="Editar">
+								<i class="fas fa-edit"></i>
+							</a>
+							
+							<a th:href="@{'/cursos/' + ${curso.id}} + '/deletar'" class="btn btn-danger btn-sm" title="Deletar">
+								<i class="fas fa-trash"></i>
+							</a>
+		
+							<a th:href="@{'/cursos/' + ${curso.id} + '/matrizes'}" class="btn btn-info btn-sm font-weight-bold" title="Ver Matriz Curricular">
+								<i class="fas fa-list"></i>
+							</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+	    </div>
+	</div>                 
+</body>
+
+</html>

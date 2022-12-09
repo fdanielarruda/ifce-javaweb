@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html 
+	lang="pt-br" 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+
+<head th:replace="~{fragmentos/layout :: head}"></head>
+
+<body id="page-top">
+
+	<div id="wrapper">
+	
+		<ul th:replace="~{fragmentos/layout :: menu}"></ul>
+		
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <div id="content">
+
+				<nav th:replace="~{fragmentos/layout :: topbar}"></nav>
+
+                <div class="container-fluid pt-3">
+
+					<!-- PÁGINA -->
+                    <div class="row col-xl-12 justify-content-center mx-auto">
+                        <div class="col-xl-10 col-md-10 mb-4">
+                        	<div class="card shadow" layout:fragment="corpo_pagina">
+                        		
+                        	</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            
+            <footer th:replace="~{fragmentos/layout :: rodape}"></footer>
+        </div>
+    </div>
+    
+    <div th:replace="~{fragmentos/layout :: scripts}"></div>
+    
+    <script layout:fragment="script_pagina">
+                        		
+    </script>
+</body>
+
+</html>

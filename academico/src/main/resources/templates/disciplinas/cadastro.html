@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	layout:decorate="~{fragmentos/template}"
+>
+<head></head>
+
+<body>
+   	<div class="card shadow" layout:fragment="corpo_pagina">
+   		<div class="card-header font-weight-bold">DISCIPLINA</div>
+   	
+   		<div class="card-body">
+  			<form th:action="${disciplina.id == null} ? @{/disciplinas/salvar} : @{/disciplinas/atualizar}" method="POST" th:object="${disciplina}">
+   				<div class="form-row">
+   					<div class="form-group col-12">
+   						<label for="nome">Nome da disciplina</label>
+   						<input type="text" 
+   							class="form-control" 
+   							id="nome" name="nome"
+   							th:field="*{nome}"
+   							autofocus required
+   						/>
+   					</div>
+   					
+   					<div class="form-group col-12">
+   						<label for="sigla">Sigla</label>
+   						<input type="text" 
+   							class="form-control" 
+   							id="sigla" name="sigla"
+   							th:field="*{sigla}"
+   							required
+   						/>
+   					</div>
+   					
+   					<div class="form-group col-12">
+   						<input type="hidden" id="id" name="id" th:field="*{id}"/>
+   						
+   						<a class="btn btn-secondary btn-sm font-weight-bold" th:href="@{/disciplinas}">
+   							<i class="fas fa-arrow-left"></i>
+   							<span>Voltar</span>
+   						</a>
+   						
+   						<button class="btn btn-success btn-sm font-weight-bold">
+   							<i class="fas fa-check"></i>
+   							<span th:text="${disciplina.id == null} ? 'Cadastrar' : 'Editar'"></span>
+   						</button>
+   					</div>
+   				</div>
+   			</form>
+   		</div>
+   	</div>
+</body>
+
+</html>

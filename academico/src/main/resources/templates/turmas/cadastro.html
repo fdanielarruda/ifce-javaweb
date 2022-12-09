@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	layout:decorate="~{fragmentos/template}"
+>
+<head></head>
+
+<body>
+	<div class="card shadow" layout:fragment="corpo_pagina">
+		<div class="card-header font-weight-bold">TURMA</div>
+	
+		<div class="card-body">
+			<form th:action="@{/turmas/salvar}" method="POST">
+				<div class="form-row">
+					<div class="form-group col-6">
+						<label for="anoLetivo">Ano</label>
+						<input type="number"
+							class="form-control" 
+							id="anoLetivo" name="anoLetivo"
+							min="1900" max="2100"
+							required
+						/>
+					</div>
+					
+					<div class="form-group col-6">
+						<label for="anoLetivo">Semestre</label>
+						<select
+							class="form-control" 
+							id="semestre" name="semestre"
+							required
+						>
+							<option value="1">1</option>
+							<option value="2">2</option>
+						</select>
+					</div>
+					
+					<div class="form-group col-12">
+						<label for="curso">Curso</label>
+						<select
+							class="form-control" 
+							id="curso" name="curso"
+							required
+						>
+							<option selected disabled>Curso</option>
+							<option 
+								th:each="curso: ${cursos}" 
+								th:value="${curso.id}" 
+								th:text="${curso.nome}"
+							></option>
+						</select>
+					</div>
+					
+					<div class="form-group col-12">
+						<label for="matriz">Matriz Curricular</label>
+						<select
+							class="form-control" 
+							id="matriz" name="matriz"
+							required disabled
+						>
+							<option selected disabled>Matriz Curricular</option>
+						</select>
+					</div>
+					
+					<div class="form-group col-12">
+						<label for="anoLetivo">Disciplina</label>
+						<select
+							class="form-control" 
+							id="disciplina" name="disciplina"
+							required disabled
+						>
+							<option selected disabled>Disciplina</option>
+						</select>
+					</div>
+					
+					<div class="form-group col-12">
+						<label for="professor">Professor</label>
+						<select
+							class="form-control" 
+							id="professor" name="professor"
+							required disabled
+						>
+							<option selected disabled>Professor</option>
+						</select>
+					</div>
+					
+					<div class="form-group col-12">
+						<a class="btn btn-secondary btn-sm font-weight-bold" th:href="@{/turmas}">
+							<i class="fas fa-arrow-left"></i>
+							<span>Voltar</span>
+						</a>
+						
+						<button class="btn btn-success btn-sm font-weight-bold">
+							<i class="fas fa-check"></i>
+							<span th:text="${curso?.id == null} ? 'Cadastrar' : 'Editar'"></span>
+						</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	
+	<script layout:fragment="script_pagina">
+		var LISTA_MATRIZES = [];
+	
+		$('#curso').change(function() {
+			listarMatriz();
+		});
+		
+		$('#matriz').change(function () {
+			listarDisciplinas();
+		})		
+		
+		$('#disciplina').change(function() {
+			listarProfessores();
+		});
+		
+		function listarMatriz() {
+			$("#matriz").html("<option selected disabled>Matriz Curricular</option>");
+			
+			let dados = { 
+				curso_id: $('#curso').val()
+			}
+			
+			$.get('/app/matrizes', dados, async function (value) {
+				let tam = value.length;
+				LISTA_MATRIZES = value;
+				
+				if (tam > 0) {
+					await $.each(value, function (idx, matriz) {
+						$("#matriz").append(`
+							<option value='${matriz.id}' ${tam == 1 ? "selected" : ""}>
+								MC: ${matriz.codigo} - ${matriz.dataMatriz}
+							</option>
+						`);
+					});
+					
+					if (tam == 1) listarDisciplinas();
+					$("#matriz").attr('disabled', false);
+				} else {
+					$("#matriz").html(`<option selected disabled>Nenhuma disponível</option>`);
+					$("#disciplina").attr('disabled', true);
+				}
+			});
+		}
+		
+		function listarDisciplinas() {
+			$("#disciplina").html("<option selected disabled>Disciplina</option>");
+			
+			let disciplinas = LISTA_MATRIZES.filter(value => {
+				return value.id == $("#matriz").val();
+			});
+			
+			let tam = disciplinas[0]?.todasDisciplinas.length;
+			
+			if (tam > 0) {
+				$.each(disciplinas[0]?.todasDisciplinas, function (idx, disciplina) {
+					$("#disciplina").append(`
+						<option value='${disciplina.id}' ${tam == 1 ? 'selected' : ''}>${disciplina.nome} (${disciplina.sigla})</option>
+					`);
+				});
+				
+				if (tam == 1) listarProfessores();
+				$("#disciplina").attr('disabled', false);
+			} else {
+				$("#disciplina").html(`<option selected disabled>Nenhuma disponível</option>`)
+				$("#professor").attr('disabled', true);
+			}
+			
+		}
+		
+		function listarProfessores() {
+			$("#professor").html("<option selected disabled>Professor</option>");
+			
+			$.get('/app/professores', async function (value) {
+				let tam = value.length;
+				
+				if (tam > 0) {
+					await $.each(value, function (idx, professor) {
+						$("#professor").append(`
+							<option value='${professor.id}' ${tam == 1 ? "selected" : ""}>
+								${professor.nome} - ${professor.matricula}
+							</option>
+						`);
+					});
+					
+					$("#professor").attr('disabled', false);
+				} else {
+					$("#professor").html(`<option selected disabled>Nenhum disponível</option>`);
+				}
+			});
+		}
+	</script>
+</body>
+
+</html>

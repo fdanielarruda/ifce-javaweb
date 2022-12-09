@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	layout:decorate="~{fragmentos/template}"
+>
+<head></head>
+
+<body>
+	<div class="card shadow" layout:fragment="corpo_pagina">
+		<div class="card-header font-weight-bold">CURSO</div>
+	
+		<div class="card-body">
+			<form th:action="${curso.id == null} ? @{/cursos/salvar} : @{/cursos/atualizar}" method="POST" th:object="${curso}">
+				<div class="form-row">
+					<div class="form-group col-12">
+						<label for="nome">Nome do Curso</label>
+						<input type="text" 
+							class="form-control" 
+							id="nome" name="nome"
+							autofocus
+							th:field="*{nome}"
+							required
+						/>
+					</div>
+					
+					<div class="form-group col-12">
+						<input type="hidden" id="id" name="id" th:field="*{id}"/>
+						
+						<a class="btn btn-secondary btn-sm font-weight-bold" th:href="@{/cursos}">
+							<i class="fas fa-arrow-left"></i>
+							<span>Voltar</span>
+						</a>
+						
+						<button class="btn btn-success btn-sm font-weight-bold">
+							<i class="fas fa-check"></i>
+							<span th:text="${curso.id == null} ? 'Cadastrar' : 'Editar'"></span>
+						</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</body>
+
+</html>

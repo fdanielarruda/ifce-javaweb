@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	layout:decorate="~{fragmentos/template}"
+>
+<head></head>
+
+<body>
+	<div class="card shadow" layout:fragment="corpo_pagina">
+    	<div class="card-header font-weight-bold">TURMAS</div>
+                	
+   		<div class="card-body">
+       		<a th:href="@{'/turmas/cadastrar'}" class="btn btn-success btn-sm mb-3 font-weight-bold">
+				<i class="fas fa-plus"></i> Nova Turma
+			</a>
+	                		
+	        <table class="table table-sm text-center">
+				<thead>
+					<tr>
+						<th>Id</th>
+						<th>Semestre</th>
+						<th>Disciplina</th>
+						<th>Professor</th>
+						<th>Ações</th>
+					</tr>
+				</thead>
+				
+				<tbody>
+					<tr th:each="turma: ${turmas}">
+						<td th:text="${turma.id}"></td>
+						<td th:text="${turma.anoLetivo + '.' + turma.semestre}"></td>
+						<td th:text="${turma.disciplina.nome}"></td>
+						<td th:text="${turma.professor.nome}"></td>
+						<td>
+							<a th:href="@{'/turmas/' + ${turma.id} + '/alunos'}" class="btn btn-info btn-sm" title="Alunos">
+								<i class="fas fa-users"></i>
+							</a>
+		
+							<a th:href="@{'/turmas/' + ${turma.id} + '/deletar'}" class="btn btn-danger btn-sm" title="Deletar">
+								<i class="fas fa-trash"></i>
+							</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+	    </div>
+	</div>                 
+</body>
+
+</html>

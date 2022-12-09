@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	layout:decorate="~{fragmentos/template}"
+>
+<head></head>
+
+<body>
+	<div class="card shadow" layout:fragment="corpo_pagina">
+    	<div class="card-header font-weight-bold">TURMAS - ALUNOS</div>
+                	
+   		<div class="card-body">
+       		<a class="btn btn-secondary btn-sm font-weight-bold mb-3" th:href="@{/turmas}">
+				<i class="fas fa-arrow-left"></i>
+				<span>Voltar</span>
+			</a>
+			
+			<p>
+				<strong>Disciplina:</strong> <label th:text="${turma.disciplina.nome}"></label><br/>
+				<strong>Professor:</strong> <label th:text="${turma.professor.nome}"></label><br/>
+				<strong>Semestre:</strong> <label th:text="${turma.anoLetivo} + '.' + ${turma.semestre}"></label>
+	        </p>
+	         
+	        <table class="table table-sm text-center">
+				<thead>
+					<tr>
+						<th>Id</th>
+						<th>Aluno</th>
+						<th>Matrícula</th>
+						<th>Ações</th>
+					</tr>
+				</thead>
+				
+				<tbody>
+					<tr th:each="aluno: ${turma.alunos}">
+						<td th:text="${aluno.id}"></td>
+						<td th:text="${aluno.nome}"></td>
+						<td th:text="${aluno.matricula}"></td>
+						<td>
+							<a 
+								th:href="@{'/turmas/' + ${turma.id} + '/alunos/' + ${aluno.id} + '/remover'}" 
+								class="btn btn-danger btn-sm" 
+								title="Remover da Turma"
+							>
+								<i class="fas fa-user-times"></i>
+							</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			
+			<div class="row">
+				<div class="col">
+					<h6 class="font-weight-bold mt-3">Adicionar alunos</h6>
+				</div>
+			</div>
+			
+			<form th:action="@{'/turmas/' + ${turma.id} + '/alunos/salvar'}" method="POST">
+				<div class="form-row">
+					<div class="form-group col-4">
+						<input type="text"
+							class="form-control" 
+							id="pesquisarAluno"
+							placeholder="Pesquisar por nome ou matrícula"
+						/>
+					</div>
+					
+					<div class="form-group col-7">
+						<select
+							class="form-control"
+							id="aluno" name="aluno"
+							required disabled
+						>
+							<option selected disabled>Alunos</option>
+						</select>
+					</div>
+					
+					<div class="form-group col-1">
+						<button type="submit" class="btn btn-success col-12">
+							<i class="fas fa-plus"></i>
+						</button>
+					</div>
+				</div>
+			</form>
+	    </div>
+	</div>
+	
+	<script layout:fragment="script_pagina">
+		$("#pesquisarAluno").keyup(function (event) {
+			let pesquisa = $("#pesquisarAluno").val();
+			
+			if (pesquisa.length > 0) {
+				$.get('/app/alunos/pesquisa', { pesquisa }, async function (value) {
+					let tam = value.length;
+					
+					if (tam > 0) {
+						$("#aluno").html("<option selected disabled>Alunos</option>");
+						
+						await $.each(value, function (idx, aluno) {
+							$("#aluno").append(`
+								<option value='${aluno.id}'>
+									${aluno.nome} - ${aluno.matricula}
+								</option>
+							`);
+						});
+						
+						$("#aluno").attr('disabled', false);
+					} else {
+						$("#aluno").html(`<option selected disabled>Nenhum Encontrado</option>`);
+					}
+				});
+			
+			}
+		});
+	</script>       
+</body>
+
+</html>

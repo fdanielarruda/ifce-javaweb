@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	layout:decorate="~{fragmentos/template}"
+>
+<head></head>
+
+<body>
+   	<div class="card shadow" layout:fragment="corpo_pagina">
+   		<div class="card-header font-weight-bold">PROFESSOR</div>
+   	
+   		<div class="card-body">
+   			<a th:href="@{'/professores/cadastrar'}" class="btn btn-success btn-sm mb-3 font-weight-bold">
+				<i class="fas fa-plus"></i> Novo Professor
+			</a>
+
+			<table class="table table-sm text-center">
+				<thead>
+					<tr>
+						<th>Id</th>
+						<th>Nome</th>
+						<th>Matrícula</th>
+						<th>Status</th>
+						<th>Ações</th>
+					</tr>
+				</thead>
+				
+				<tbody>
+					<tr th:each="professor: ${professores}">
+						<td th:text="${professor.id}"></td>
+						<td th:text="${professor.nome}"></td>
+						<td th:text="${professor.matricula}"></td>
+						<td>
+							<span 
+								th:text="${professor.status} ? 'Ativa' : 'Inativa'"
+								th:class="badge"
+								th:classappend="${professor.status} ? 'badge-success' : 'badge-danger'"
+							></span>
+						</td>
+						<td>									
+							<!-- ATIVAR/DESATIVA A MATRIZ -->
+							<a th:if="${professor.status}"
+								th:href="@{'/professores/' + ${professor.id}} + '/status?s=false'" 
+								class="btn btn-danger btn-sm" 
+								title="Desativar"
+							>
+								<i class="fas fa-times-circle"></i>
+							</a>
+							
+							<a th:unless="${professor.status}"
+								th:href="@{'/professores/' + ${professor.id}} + '/status?s=true'" 
+								class="btn btn-success btn-sm" 
+								title="Ativar"
+							>
+								<i class="fas fa-check-circle"></i>
+							</a>
+	
+							<!-- DETALHES SOBRE A MATRIZ -->
+							<a 
+								th:href="@{'/professores/' + ${professor.id} + '/editar'}"
+								class="btn btn-warning btn-sm font-weight-bold"
+								title="Editar"
+							>
+								<i class="fas fa-edit"></i>
+							</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</body>
+
+</html>

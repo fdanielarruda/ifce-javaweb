@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	layout:decorate="~{fragmentos/template}"
+>
+<head></head>
+
+<body>
+	<div class="card shadow" layout:fragment="corpo_pagina">
+		<div class="card-header font-weight-bold">PROFESSOR</div>
+	
+		<div class="card-body">
+			<form th:action="${professor?.id == null} ? @{/professores/salvar} : @{/professores/atualizar}" method="POST">
+				<div class="form-row">
+					<div class="form-group col-12">
+						<label for="nome">Nome do Professor</label>
+						<input type="text" 
+							class="form-control" 
+							id="nome" name="nome"
+							th:value="${professor?.nome}"
+							autofocus required
+						/>
+					</div>
+					
+					<div class="form-group col-12">
+						<label for="matricula">Matrícula</label>
+						<input type="text" 
+							class="form-control" 
+							id="matricula" name="matricula"
+							th:value="${professor?.matricula}"
+							autofocus required
+						/>
+					</div>
+					
+					<div class="form-group col-12" th:if="${professor?.id != null}">
+						<label for="matricula">Status</label>
+						<select 
+							class="form-control" 
+							id="status" name="status"
+						>
+							<option value="1" th:selected="${professor?.status == true}">Ativo</option>
+							<option value="0" th:selected="${professor?.status == false}">Inativo</option>
+						</select>
+					</div>
+					
+					<!-- <div class="form-group col-12">
+						<label for="disciplinas">Disciplinas</label>
+						<div class="row">
+							<div class="col-sm-6" th:each="disciplina: ${disciplinas}">
+								<input type="checkbox" name="" th:value="${disciplina.id}" />
+								<label th:text="${disciplina.nome}"></label>
+							</div>
+						</div>
+					 </div>-->
+					
+					<div class="form-group col-12">
+						<input type="hidden" id="id" name="id" th:value="${professor?.id}" />
+						
+						<a class="btn btn-secondary btn-sm font-weight-bold" th:href="@{/professores}">
+							<i class="fas fa-arrow-left"></i>
+							<span>Voltar</span>
+						</a>
+						
+						<button class="btn btn-success btn-sm font-weight-bold">
+							<i class="fas fa-check"></i>
+							<span th:text="${professor?.id == null} ? 'Cadastrar' : 'Editar'"></span>
+						</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</body>
+
+</html>

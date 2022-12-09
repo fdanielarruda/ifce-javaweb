@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	layout:decorate="~{fragmentos/template}"
+>
+<head></head>
+
+<body>
+   	<div class="card shadow" layout:fragment="corpo_pagina">
+   		<div class="card-header font-weight-bold">ALUNOS</div>
+   	
+   		<div class="card-body">
+   			<a th:href="@{'/alunos/cadastrar'}" class="btn btn-success btn-sm mb-3 font-weight-bold">
+				<i class="fas fa-plus"></i> Novo Aluno
+			</a>
+	                 		
+			<table class="table table-sm">
+				<thead>
+					<tr>
+						<th>Id</th>
+						<th>Nome</th>
+						<th>Matrícula</th>
+						<th class="text-center">Ações</th>
+					</tr>
+				</thead>
+				
+				<tbody>
+					<tr th:each="aluno: ${alunos}">
+						<td th:text="${aluno.id}"></td>
+						<td th:text="${aluno.nome}"></td>
+						<td th:text="${aluno.matricula}"></td>
+						<td class="text-center">
+							<a 
+								th:href="@{'/alunos/' + ${aluno.id}} + '/editar'" 
+								class="btn btn-warning btn-sm"
+								title="Editar"
+							>
+								<i class="fas fa-edit"></i>
+							</a>
+							
+							<a 
+								th:href="@{'/alunos/' + ${aluno.id}} + '/remover'" 
+								class="btn btn-danger btn-sm"
+								title="Remover"
+							>
+								<i class="fas fa-user-times"></i>
+							</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+  		</div>
+   	</div>              
+</body>
+
+</html>

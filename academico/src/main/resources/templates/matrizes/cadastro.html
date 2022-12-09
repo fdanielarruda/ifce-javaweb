@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	layout:decorate="~{fragmentos/template}"
+>
+<head></head>
+
+<body>
+   	<div class="card shadow" layout:fragment="corpo_pagina">
+   		<div class="card-header font-weight-bold">MATRIZ CURRICULAR</div>
+   	
+   		<div class="card-body">
+  			<form th:action="@{'/cursos/' + ${curso.id} + '/matrizes/salvar'}" method="POST">
+   				<div class="form-row">
+   					<div class="form-group col-12">
+   						<span class="font-weight-bold" th:text="'Curso: ' + ${curso.nome}"></span>
+   					</div>
+   				
+   					<div class="form-group col-12">
+   						<label for="codigo">Código</label>
+   						<input type="text" 
+   							class="form-control" id="codigo" name="codigo"
+   							autofocus required
+   						/>
+   					</div>
+   					
+   					<div class="form-group col-12">
+   						<label for="dataMatriz">Data</label>
+   						<input type="date" 
+   							class="form-control" id="dataMatriz" name="dataMatriz"
+   							required
+   						/>
+   					</div>
+   					
+   					<div class="form-group col-12 font-weight-bold">
+   						<hr>
+   						<span>Montagem da Grade Curricular</span>
+   					</div>
+   					
+   					<div class="form-group col-6">
+   						<label for="disciplina">Adicionar Disciplina</label>
+   						
+   						<select class="form-control" id="disciplina">
+   							<option selected disabled>Disciplina</option>
+   							<option 
+   								th:each="disciplina : ${disciplinas}" 
+   								th:text="${disciplina.nome}"
+   								th:value="${disciplina.id}"
+   								th:id="'opt_' + ${disciplina.id}"
+   							></option>
+   						</select>
+   					</div>
+   					
+   					<div class="form-group col-6">
+   						<label for="dataMatriz">Semestre</label>
+   						
+   						<div class="row">
+   							<div class="col-8">
+   								<input 
+   									type="number"
+   									class="form-control"
+   									min="1" max="99" 
+   									placeholder="Nº do Semestre"
+   									id="semestre"
+   								/>
+   							</div>
+   							
+   							<div class="col-4">
+   								<span class="btn btn-primary col-12 font-weight-bold" id="btn_add_disciplina">
+	    							<i class="fas fa-plus"></i>
+	    						</span>
+  							</div>
+  						</div>
+  					</div>
+
+					<div class="form-group col-12">
+   						<div class="row">
+   							<div class="col-12">
+    							<table class="table table-sm">
+    								<thead>
+    									<tr>
+    										<th>Semestre</th>
+    										<th>Disciplina</th>
+    										<th class="text-center">Ações</th>
+    									</tr>
+    								</thead>
+    								
+    								<tbody id="table_matriz">
+    									<tr>
+    										<td colspan="3">Nenhuma disciplina adicionada</td>
+    									</tr>
+    								</tbody>
+    							</table>
+   							</div>
+   						</div>
+   					</div>
+   					
+   					<div class="form-group col-12">
+   						<input type="hidden" id="id" name="id" />
+   						
+   						<input type="hidden" id="hidden_disciplinas" name="disciplinas" />
+   						
+   						<a class="btn btn-secondary btn-sm font-weight-bold" th:href="@{/cursos}">
+   							<i class="fas fa-arrow-left"></i>
+   							<span>Voltar</span>
+   						</a>
+   						
+   						<button class="btn btn-success btn-sm font-weight-bold">
+   							<i class="fas fa-check"></i>
+   							<span th:text="Cadastrar"></span>
+   						</button>
+   					</div>
+   				</div>
+   			</form>
+   		</div>
+   	</div>
+   	
+   	<script layout:fragment="script_pagina">
+   		var grade_curricular = [];
+   	
+   		$('#btn_add_disciplina').click(function (){
+   			let disciplina = $('#disciplina').val();
+   			let nome_disciplina = $('#disciplina :selected').text();
+   			let semestre = $('#semestre').val();
+   			
+   			grade_curricular.push({
+   				disciplina,
+   				nome_disciplina,
+   				semestre,
+   				status: true
+   			});
+   			
+   			grade_curricular.sort(function(a, b) {
+   			    return a.semestre < b.semestre ? -1 : a.semestre > b.semestre ? 1 : 0;
+   			});
+
+   			$('#opt_' + disciplina).attr('disabled', true).css('background', 'silver');
+   			
+   			$('#disciplina').val($('#disciplina option:nth-child(1)').val());
+   			$('#semestre').val('');
+   			
+   			tabelaDisciplinas();
+   		});
+   		
+   		function removerDisciplina(idx) {
+   			grade_curricular[idx].status = false;
+   			
+   			$('#opt_' + grade_curricular[idx].disciplina).attr('disabled', false).css('background', 'white');
+   			
+   			tabelaDisciplinas();
+   		}
+   		
+   		function tabelaDisciplinas() {
+   			$('#table_matriz').html('');
+   			let disciplinas = [];
+   			
+   			grade_curricular.map(function(value, idx) {
+   				disciplinas.push(value.disciplina);
+   				disciplinas.push(value.semestre);
+   			});
+   			
+   			$('#hidden_disciplinas').val(JSON.stringify(disciplinas));
+   			
+   			grade_curricular.map(function(value, idx) {
+   				if (value.status) {
+   					$('#table_matriz').append(`
+ 		   				<tr>
+ 		   					<td>${value.semestre}</td>
+ 		   					<td>${value.nome_disciplina}</td>
+ 		   					<td class='text-center'>
+ 		   						<span class='btn btn-danger btn-sm' onclick='removerDisciplina(${idx})'>
+ 		   							<i class='fas fa-times-circle'></i>
+ 		   						</span>
+ 		   					</td>
+ 		   				</tr>
+ 		   			`);	
+   				}
+   			});
+   		}
+   	</script>
+</body>
+
+</html>
