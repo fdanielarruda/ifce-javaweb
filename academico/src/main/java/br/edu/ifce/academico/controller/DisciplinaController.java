@@ -27,7 +27,7 @@ public class DisciplinaController {
 	@Autowired
 	CursoService cursoService;
 	
-	@GetMapping({"/disciplinas"})
+	@GetMapping("/disciplinas")
 	public String index(Model model) {
 		List<Disciplina> disciplinas = disciplinaService.listarDisciplinas();
 		
@@ -60,16 +60,5 @@ public class DisciplinaController {
 		}
 		
 		return "redirect:/disciplinas";
-	}
-	
-	////////////////// ROTAS APENAS PARA CONSULTA FORA DO TH //////////////////
-	@GetMapping("app/disciplinas")
-	public void appDisciplinas(@PathVariable("curso_id") Long id) {
-		//Curso c = cursoService.consultar(id);
-		
-		/*if (disciplina == null)
-			return ResponseEntity.notFound().build();
-		else
-			return ResponseEntity.ok(disciplina);*/
 	}
 }

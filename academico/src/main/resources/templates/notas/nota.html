@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	layout:decorate="~{fragmentos/template}"
+>
+<head></head>
+
+<body>
+   	<div class="card shadow" layout:fragment="corpo_pagina">
+   		<div class="card-header font-weight-bold">NOTAS</div>
+   	
+   		<div class="card-body">
+   			<div class="row">
+   				<div class="form-group col-12">
+					<label for="curso">Curso</label>
+					<select
+						class="form-control" 
+						id="curso" name="curso"
+						required
+					>
+						<option selected disabled>Curso</option>
+						<option 
+							th:each="curso: ${cursos}" 
+							th:value="${curso.id}" 
+							th:text="${curso.nome}"
+						></option>
+					</select>
+				</div>
+				
+				<div class="form-group col-12">
+					<label for="matriz">Matriz Curricular</label>
+					<select
+						class="form-control" 
+						id="matriz" name="matriz"
+						required disabled
+					>
+						<option selected disabled>Matriz Curricular</option>
+					</select>
+				</div>
+				
+				<div class="form-group col-sm-8">
+					<label for="anoLetivo">Disciplina</label>
+					<select
+						class="form-control" 
+						id="disciplina" name="disciplina"
+						required disabled
+					>
+						<option selected disabled>Disciplina</option>
+					</select>
+				</div>
+   				
+   				<div class="form-group col-sm-4">
+					<label for="turma">Turma</label>
+   					<select class="form-control" id="turma" disabled>
+   						<option selected disabled>Turmas</option>
+   					</select>
+   				</div>
+   			</div>
+   			
+   			<div class="row">
+   				<div class="col-12 py-2">
+   					<strong>Alunos</strong>
+   				</div>
+   			</div>
+
+			<table class="table table-sm text-center">
+				<thead>
+					<tr>
+						<th>Matrícula</th>
+						<th class="text-left">Nome</th>
+						<th>N1</th>
+						<th>N2</th>
+						<th>ME</th>
+						<th>AF</th>
+						<th>NF</th>
+						<th>Ações</th>
+					</tr>
+				</thead>
+				
+				<tbody id="tbody_alunos">
+					
+				</tbody>
+			</table>
+		</div>
+	</div>
+	
+	<script layout:fragment="script_pagina">
+		var LISTA_MATRIZES = [];
+		
+		$('#curso').change(function() {
+			listarMatriz();
+		});
+		
+		$('#matriz').change(function () {
+			listarDisciplinas();
+		});	
+		
+		$('#disciplina').change(function() {
+			listarTurmas();
+		});
+		
+		$('#turma').change(function () {
+			listarAlunos();
+		});
+		
+		function listarMatriz() {
+			$("#matriz").html("<option selected disabled>Matrizes Curricular</option>");
+			
+			let dados = { 
+				curso_id: $('#curso').val()
+			}
+			
+			$.get('/app/matrizes', dados, async function (value) {
+				let tam = value.length;
+				LISTA_MATRIZES = value;
+				
+				if (tam > 0) {
+					await $.each(value, function (idx, matriz) {
+						$("#matriz").append(`
+							<option value='${matriz.id}' ${tam == 1 ? "selected" : ""}>
+								MC: ${matriz.codigo} - ${matriz.dataMatriz}
+							</option>
+						`);
+					});
+					
+					if (tam == 1) listarDisciplinas();
+					$("#matriz").attr('disabled', false);
+				} else {
+					$("#matriz").html(`<option selected disabled>Nenhuma disponível</option>`);
+					$("#disciplina").attr('disabled', true);
+				}
+			});
+		}
+		
+		function listarDisciplinas() {
+			$("#disciplina").html("<option selected disabled>Disciplinas</option>");
+			
+			let disciplinas = LISTA_MATRIZES.filter(value => {
+				return value.id == $("#matriz").val();
+			});
+			
+			let tam = disciplinas[0]?.todasDisciplinas.length;
+			
+			if (tam > 0) {
+				$.each(disciplinas[0]?.todasDisciplinas, function (idx, disciplina) {
+					$("#disciplina").append(`
+						<option value='${disciplina.id}' ${tam == 1 ? 'selected' : ''}>${disciplina.nome} (${disciplina.sigla})</option>
+					`);
+				});
+				
+				if (tam == 1) listarTurmas();
+				$("#disciplina").attr('disabled', false);
+			} else {
+				$("#disciplina").html(`<option selected disabled>Nenhuma disponível</option>`)
+				$("#turma").attr('disabled', true);
+			}
+		}
+		
+		function listarTurmas() {
+			$("#turma").html("<option selected disabled>Turmas</option>");
+			
+			let dados = { 
+				curso_id: $('#curso').val(),
+				disciplina_id: $('#disciplina').val()
+			}
+			
+			$.get('/app/turmas', dados, async function (value) {
+				let tam = value.length;
+				
+				if (tam > 0) {
+					await $.each(value, function (idx, turma) {
+						$("#turma").append(`
+							<option value='${turma.id}'>
+								${turma.anoLetivo}.${turma.semestre}
+							</option>
+						`);
+					});
+					
+					$("#turma").attr('disabled', false);
+				} else {
+					$("#turma").html(`<option selected disabled>Nenhuma disponível</option>`);
+				}
+			});
+		}
+		
+		function listarAlunos() {
+			$("#tbody_alunos").html("");
+			
+			let dados = { 
+				turma_id: $('#turma').val()
+			}
+			
+			$.get('/app/alunos/notas', dados, async function (value) {
+				let tam = value.length;
+				
+				if (tam > 0) {
+					await $.each(value, function (idx, aluno) {
+						let pos = `${aluno.turma_id}_${aluno.id}`;
+						
+						$("#tbody_alunos").append(`
+							<tr>
+								<td>${aluno.matricula}</td>
+								<td class="text-left">${aluno.nome}</td>
+								<td id="n1_${pos}">${aluno.n1 === null ? "-" : aluno.n1}</td>
+								<td id="n2_${pos}">${aluno.n2 === null ? "-" : aluno.n2}</td>
+								<td id="me_${pos}" class="font-weight-bold">${aluno.media === null ? "-" : aluno.media}</td>
+								<td id="af_${pos}">${aluno.af === null ? "-" : aluno.af}</td>
+								<td id="nf_${pos}" class="font-weight-bold text-${aluno.aprovado ? `success` : `danger`}">${aluno.nf === null ? "-" : aluno.nf}</td>
+								<td>
+									<button
+										id="acoes_${aluno.turma_id}_${aluno.id}"
+										onclick="editarNota(${aluno.id}, ${aluno.turma_id})"
+										class="btn btn-warning btn-sm font-weight-bold"
+										title="Editar"
+										value="editar"
+									>
+										<i class="fas fa-edit"></i>
+									</button>
+								</td>
+							</tr>
+						`);
+					});
+				}
+			});
+		}
+		
+		function editarNota(aluno_id, turma_id) {
+			let pos = `_${turma_id}_${aluno_id}`;
+			
+			let n1 = $(`#n1${pos}`);
+			let n2 = $(`#n2${pos}`);
+			let af = $(`#af${pos}`);
+			let me = $(`#me${pos}`);
+			let nf = $(`#nf${pos}`);
+			let acoes = $(`#acoes_${turma_id}_${aluno_id}`);
+			
+			if (acoes.val() == 'editar') {
+				n1.html(`<input type="text" class="campo_notas" onkeyup="apenasNumeros(event, this)" value="${n1.text()}" />`);
+				n2.html(`<input type="text" class="campo_notas" onkeyup="apenasNumeros(event, this)" value="${n2.text()}" />`);
+				af.html(`<input type="text" class="campo_notas" onkeyup="apenasNumeros(event, this)" value="${af.text()}" />`);
+				
+				acoes.html('<i class="fas fa-check">');
+				acoes.removeClass('btn-warning').addClass('btn-success');
+				acoes.val('salvar');
+				acoes.attr('title', 'Salvar');
+			}
+			
+			else {
+				let n1_i = $(`#n1${pos} input`);
+				let n2_i = $(`#n2${pos} input`);
+				let af_i = $(`#af${pos} input`);
+				
+				let acoes = $(`#acoes${pos}`);
+				
+				let dados = {
+					aluno_id,
+					turma_id,
+					n1: n1_i.val() == "-" ? 0 : n1_i.val(),
+					n2: n2_i.val() == "-" ? 0 : n2_i.val(),
+					af: af_i.val() == "-" ? 0 : af_i.val()
+				}
+				
+				$.post('/app/notas/salvar', dados, function (value) {
+					n1.html(value.n1 === null ? "-" : value.n1);
+					n2.html(value.n2 === null ? "-" : value.n2);
+					af.html(value.af === null ? "-" : value.af);
+					me.html(value.media === null ? "-" : value.media);
+					nf.html(value.nf === null ? "-" : value.nf);
+					nf.addClass(`text-${value.aprovado ? `success` : `danger`}`)
+						.removeClass(`text-${value.aprovado ? `danger` : `success`}`);
+					
+					acoes.html('<i class="fas fa-edit">');
+					acoes.removeClass('btn-success').addClass('btn-warning');
+					acoes.val('editar');
+					acoes.attr('title', 'Editar');
+				});
+			}
+		}
+	</script>
+</body>
+
+</html>

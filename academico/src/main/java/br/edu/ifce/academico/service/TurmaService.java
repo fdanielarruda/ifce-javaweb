@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.edu.ifce.academico.model.Aluno;
+import br.edu.ifce.academico.model.Curso;
+import br.edu.ifce.academico.model.Disciplina;
 import br.edu.ifce.academico.model.Turma;
 import br.edu.ifce.academico.repository.TurmaRepository;
 
@@ -21,6 +23,10 @@ public class TurmaService {
 	
 	public Turma consultarTurma(Long id) {
 		return turmaRepository.findById(id).get();
+	}
+	
+	public List<Turma> consultarTurmasPorCursoDisciplina(Curso curso, Disciplina disciplina) {
+		return turmaRepository.findByCursoAndDisciplina(curso, disciplina);
 	}
 	
 	public void deletarTurma(Turma turma) {

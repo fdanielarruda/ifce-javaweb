@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.edu.ifce.academico.dto.AlunoNotas;
 import br.edu.ifce.academico.model.Aluno;
 import br.edu.ifce.academico.repository.AlunoRepository;
 
@@ -24,6 +25,10 @@ public class AlunoService {
 	
 	public Aluno consultarAluno(Long id_aluno) {
 		return alunoRepository.findById(id_aluno).get();
+	}
+	
+	public List<AlunoNotas> consultarAlunosNotasDaTurma(Long turma_id) {
+		return alunoRepository.getAlunosNotasDaTurma(turma_id);
 	}
 	
 	public void salvarAluno(Aluno aluno) {

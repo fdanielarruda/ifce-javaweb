@@ -25,6 +25,9 @@ public class Turma {
 	@OneToOne
 	private Professor professor;
 	
+	@OneToOne
+	private Curso curso;
+	
 	@ManyToMany
 	private List<Aluno> alunos;
 
@@ -74,5 +77,13 @@ public class Turma {
 
 	public void setAlunos(List<Aluno> alunos) {
 		this.alunos = alunos;
+	}
+
+	public Curso getCurso() {
+		return curso;
+	}
+
+	public void setCurso(Curso curso) {
+		this.curso = curso;
 	}
 }

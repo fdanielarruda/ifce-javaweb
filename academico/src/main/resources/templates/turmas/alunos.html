@@ -18,6 +18,7 @@
 			</a>
 			
 			<p>
+				<strong>Curso:</strong> <label th:text="${turma.curso.nome}"></label><br/>
 				<strong>Disciplina:</strong> <label th:text="${turma.disciplina.nome}"></label><br/>
 				<strong>Professor:</strong> <label th:text="${turma.professor.nome}"></label><br/>
 				<strong>Semestre:</strong> <label th:text="${turma.anoLetivo} + '.' + ${turma.semestre}"></label>

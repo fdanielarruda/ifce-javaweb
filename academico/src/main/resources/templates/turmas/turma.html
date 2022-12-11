@@ -19,8 +19,8 @@
 	        <table class="table table-sm text-center">
 				<thead>
 					<tr>
-						<th>Id</th>
 						<th>Semestre</th>
+						<th>Curso</th>
 						<th>Disciplina</th>
 						<th>Professor</th>
 						<th>Ações</th>
@@ -29,8 +29,8 @@
 				
 				<tbody>
 					<tr th:each="turma: ${turmas}">
-						<td th:text="${turma.id}"></td>
 						<td th:text="${turma.anoLetivo + '.' + turma.semestre}"></td>
+						<td th:text="${turma.curso.nome}"></td>
 						<td th:text="${turma.disciplina.nome}"></td>
 						<td th:text="${turma.professor.nome}"></td>
 						<td>
