@@ -35,6 +35,19 @@
    					</div>
    					
    					<div class="form-group col-12">
+   						<label for="curso">Curso </label>
+   						<select id="curso" name="curso" class="form-control">
+   							<option selected disabled>Cursos</option>
+   							<option
+   								th:each="curso: ${cursos}"
+   								th:value="${curso.id}"
+   								th:text="${curso.nome}"
+   								th:selected="${aluno?.curso?.id == curso?.id ? 'selected' : ''}"
+   							></option>
+   						</select>
+   					</div>
+   					
+   					<div class="form-group col-12">
    						<input type="hidden" id="id" name="id" th:value="${aluno?.id}"/>
    						
    						<a class="btn btn-secondary btn-sm font-weight-bold" th:href="@{/alunos}">

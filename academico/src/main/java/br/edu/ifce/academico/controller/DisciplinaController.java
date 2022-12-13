@@ -61,4 +61,14 @@ public class DisciplinaController {
 		
 		return "redirect:/disciplinas";
 	}
+	
+	//////////////////EDITAR //////////////////
+	@GetMapping("/disciplinas/{disciplina_id}/editar")
+	public String editarDisciplina(Model model, @PathVariable("disciplina_id") Long id) {
+		Disciplina disciplina = disciplinaService.consultar(id);
+		
+		model.addAttribute("disciplina", disciplina);
+		
+		return "disciplinas/cadastro";
+	}	
 }

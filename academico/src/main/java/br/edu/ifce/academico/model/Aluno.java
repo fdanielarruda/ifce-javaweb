@@ -6,8 +6,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 @Entity
@@ -23,12 +24,13 @@ public class Aluno {
 	@OneToOne
 	private Curso curso;
 	
-	@ManyToMany(mappedBy = "alunos")
+	@ManyToMany
+	@JoinTable(name = "turma_alunos",
+			joinColumns = @JoinColumn(name = "aluno_id"),
+			inverseJoinColumns = @JoinColumn(name = "turma_id"))
 	private List<Turma> turmas;
-
-	@OneToMany
-	private List<Nota> notas;
 	
+
 	public Long getId() {
 		return id;
 	}
@@ -59,13 +61,5 @@ public class Aluno {
 
 	public void setCurso(Curso curso) {
 		this.curso = curso;
-	}
-
-	public List<Nota> getNotas() {
-		return notas;
-	}
-
-	public void setNotas(List<Nota> notas) {
-		this.notas = notas;
 	}
 }

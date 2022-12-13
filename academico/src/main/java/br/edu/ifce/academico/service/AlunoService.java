@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import br.edu.ifce.academico.dto.AlunoNotas;
 import br.edu.ifce.academico.model.Aluno;
+import br.edu.ifce.academico.model.Curso;
 import br.edu.ifce.academico.repository.AlunoRepository;
 
 @Service
@@ -19,8 +20,8 @@ public class AlunoService {
 		return alunoRepository.findAll();
 	}
 	
-	public List<Aluno> listarAlunosPorNomeOuMatricula(String pesquisa) { 
-		return alunoRepository.findByNomeContainingOrMatriculaContaining(pesquisa, pesquisa);
+	public List<Aluno> listarAlunosPorNomeOuMatriculaECurso(String pesquisa, Curso curso) { 
+		return alunoRepository.findByCursoAndNomeContainingOrCursoAndMatriculaContaining(curso, pesquisa, curso, pesquisa);
 	}
 	
 	public Aluno consultarAluno(Long id_aluno) {

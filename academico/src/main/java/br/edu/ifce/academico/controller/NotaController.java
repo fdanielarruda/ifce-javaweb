@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import br.edu.ifce.academico.dto.AlunoNotasDto;
@@ -45,8 +44,10 @@ public class NotaController {
 	}
 	
 	//////////////////ROTAS APENAS PARA CONSULTA FORA DO TH //////////////////
-	@PostMapping("/app/notas/salvar")
+	@GetMapping("/app/notas/salvar")
 	public ResponseEntity<AlunoNotasDto> appAlunos(@RequestParam Long aluno_id, @RequestParam Long turma_id, @RequestParam Double n1, @RequestParam Double n2, Double af) {
+		System.out.println("salvar");
+		
 		Aluno a = alunoService.consultarAluno(aluno_id);
 		Turma t = turmaService.consultarTurma(turma_id);
 		
@@ -71,7 +72,6 @@ public class NotaController {
 			
 			notasService.save(no);
 			AlunoNotasDto an_dto = new AlunoNotasDto(aluno_id, a.getNome(), a.getMatricula(), no.getN1(), no.getN2(), no.getAf(), turma_id);
-			
 			return ResponseEntity.ok(an_dto);
 		}
 	}

@@ -24,9 +24,9 @@
 							</thead>
 							
 							<tbody id="table_matriz">
-								<tr th:each="disciplina: ${matriz.disciplinas}">
-									<td>#</td>
-									<td th:text="${disciplina.nome}"></td>
+								<tr th:each="matriz: ${matriz_disciplinas}">
+									<td th:text="${matriz.semestre}"></td>
+									<td th:text="${matriz.disciplina.nome}"></td>
 								</tr>
 							</tbody>
 						</table>

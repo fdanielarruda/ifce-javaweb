@@ -262,7 +262,7 @@
 					af: af_i.val() == "-" ? 0 : af_i.val()
 				}
 				
-				$.post('/app/notas/salvar', dados, function (value) {
+				$.get('/app/notas/salvar', dados, function (value) {
 					n1.html(value.n1 === null ? "-" : value.n1);
 					n2.html(value.n2 === null ? "-" : value.n2);
 					af.html(value.af === null ? "-" : value.af);

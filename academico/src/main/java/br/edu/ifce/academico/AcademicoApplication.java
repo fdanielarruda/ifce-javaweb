@@ -5,21 +5,14 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import br.edu.ifce.academico.repository.CursoRepository;
-import br.edu.ifce.academico.repository.DisciplinaRepository;
-import br.edu.ifce.academico.repository.MatrizCurricularRepository;
+import br.edu.ifce.academico.model.Usuario;
+import br.edu.ifce.academico.service.UsuarioService;
 
 @SpringBootApplication
 public class AcademicoApplication implements CommandLineRunner {
 
 	@Autowired
-	CursoRepository cursos;
-	
-	@Autowired
-	DisciplinaRepository disciplinas;
-
-	@Autowired
-	MatrizCurricularRepository matrizes;
+	UsuarioService usuarioService;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(AcademicoApplication.class, args);
@@ -27,7 +20,15 @@ public class AcademicoApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-
+		if (usuarioService.count() == 0) {
+			Usuario u = new Usuario();
+			
+			u.setNome("admin");
+			u.setEmail("admin@gmail.com");
+			u.setSenha("$2a$12$M2KxRxp8HqE4CgX63huNaefTZ8RKxuoocAzU9NfGR12jTX.Nnh0s2");
+			
+			usuarioService.salvar(u);
+		}
 	}
 
 }

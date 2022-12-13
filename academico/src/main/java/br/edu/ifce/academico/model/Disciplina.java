@@ -6,6 +6,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
 @Entity
@@ -18,7 +20,10 @@ public class Disciplina {
 	
 	private String nome;
 
-	@ManyToMany(mappedBy = "disciplinas")
+	@ManyToMany
+	@JoinTable(name = "matriz_curricular_disciplina",
+		joinColumns = @JoinColumn(name = "disciplina_id"),
+		inverseJoinColumns = @JoinColumn(name = "matriz_curricular_id"))
 	private List<MatrizCurricular> matrizCurricular;
 	
 	private Boolean status;

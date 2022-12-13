@@ -157,8 +157,10 @@
    			let disciplinas = [];
    			
    			grade_curricular.map(function(value, idx) {
-   				disciplinas.push(value.disciplina);
-   				disciplinas.push(value.semestre);
+   				if (value.status) {
+   					disciplinas.push(value.disciplina);
+   	   				disciplinas.push(value.semestre);
+   				}
    			});
    			
    			$('#hidden_disciplinas').val(JSON.stringify(disciplinas));

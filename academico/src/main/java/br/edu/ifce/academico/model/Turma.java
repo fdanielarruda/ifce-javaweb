@@ -6,6 +6,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 
@@ -29,6 +31,9 @@ public class Turma {
 	private Curso curso;
 	
 	@ManyToMany
+	@JoinTable(name = "turma_alunos",
+			joinColumns = @JoinColumn(name = "turma_id"),
+			inverseJoinColumns = @JoinColumn(name = "aluno_id"))
 	private List<Aluno> alunos;
 
 	public Long getId() {
@@ -69,14 +74,6 @@ public class Turma {
 
 	public void setProfessor(Professor professor) {
 		this.professor = professor;
-	}
-
-	public List<Aluno> getAlunos() {
-		return alunos;
-	}
-
-	public void setAlunos(List<Aluno> alunos) {
-		this.alunos = alunos;
 	}
 
 	public Curso getCurso() {

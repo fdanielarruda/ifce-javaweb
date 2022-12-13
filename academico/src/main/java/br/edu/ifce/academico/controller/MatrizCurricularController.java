@@ -21,8 +21,10 @@ import br.edu.ifce.academico.dto.MatrizCurricularDto;
 import br.edu.ifce.academico.model.Curso;
 import br.edu.ifce.academico.model.Disciplina;
 import br.edu.ifce.academico.model.MatrizCurricular;
+import br.edu.ifce.academico.model.MatrizCurricularDisciplina;
 import br.edu.ifce.academico.service.CursoService;
 import br.edu.ifce.academico.service.DisciplinaService;
+import br.edu.ifce.academico.service.MatrizCurricularDisciplinaService;
 import br.edu.ifce.academico.service.MatrizCurricularService;
 
 @Controller
@@ -39,6 +41,9 @@ public class MatrizCurricularController {
 	
 	@Autowired
 	MatrizCurricularService matrizCurricularService;
+	
+	@Autowired
+	MatrizCurricularDisciplinaService matrizCurricularDisciplinaService;
 	
 	@GetMapping("/cursos/{curso_id}/matrizes")
 	public String listMatrizByCursos(Model model, @PathVariable(value = "curso_id") Long curso_id) {
@@ -90,10 +95,16 @@ public class MatrizCurricularController {
 				List<Disciplina> disciplinas_escolhidas = new ArrayList<Disciplina>();
 
 				for (int i=0; i<disciplinas_json.size(); i+=2) {
+					// get(i) = id_discplina; get(i + 1) = semestre
 					Disciplina d = disciplinaService.consultar(Long.parseLong(disciplinas_json.get(i)));
-					disciplinas_escolhidas.add(d);
 					
-					// FALTA ADICIONAR O SEMESTRE
+					MatrizCurricularDisciplina mcd = new MatrizCurricularDisciplina();
+					
+					mcd.setDisciplina(d);
+					mcd.setMatrizCurricular(matriz_curricular);
+					mcd.setSemestre(Integer.parseInt(disciplinas_json.get(i+1)));
+					
+					matrizCurricularDisciplinaService.salvar(mcd);
 				}
 				
 				matriz_curricular.setDisciplinas(disciplinas_escolhidas);
@@ -128,8 +139,11 @@ public class MatrizCurricularController {
 		MatrizCurricular matriz = matrizService.consultarMatriz(matriz_id);
 		Curso curso = matriz.getCurso();
 		
+		List<MatrizCurricularDisciplina> matriz_disciplinas = matrizCurricularDisciplinaService.consultarPorMatriz(matriz);
+		
 		model.addAttribute("matriz", matriz);
 		model.addAttribute("curso", curso);
+		model.addAttribute("matriz_disciplinas", matriz_disciplinas);
 		
 		return "matrizes/detalhes";
 	}

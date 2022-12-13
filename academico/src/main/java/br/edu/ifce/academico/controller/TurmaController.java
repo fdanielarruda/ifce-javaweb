@@ -16,10 +16,12 @@ import br.edu.ifce.academico.dto.TurmaDto;
 import br.edu.ifce.academico.model.Aluno;
 import br.edu.ifce.academico.model.Curso;
 import br.edu.ifce.academico.model.Disciplina;
+import br.edu.ifce.academico.model.Nota;
 import br.edu.ifce.academico.model.Turma;
 import br.edu.ifce.academico.service.AlunoService;
 import br.edu.ifce.academico.service.CursoService;
 import br.edu.ifce.academico.service.DisciplinaService;
+import br.edu.ifce.academico.service.NotasService;
 import br.edu.ifce.academico.service.TurmaService;
 
 @Controller
@@ -37,6 +39,9 @@ public class TurmaController {
 	@Autowired
 	AlunoService alunoService;
 	
+	@Autowired
+	NotasService notaService;
+	
 	@GetMapping("/turmas")
 	public String index(Model model) {
 		List<Turma> turmas = turmaService.listarTurmas();
@@ -49,8 +54,15 @@ public class TurmaController {
 	@GetMapping("/turmas/{id_turma}/alunos")
 	public String alunosByTurmas(Model model, @PathVariable(value = "id_turma") Long id_turma) {
 		Turma turma = turmaService.consultarTurma(id_turma);
+		List<Nota> turma_alunos = notaService.consultarPorTurma(turma);
+		
+		List<Aluno> alunos = new ArrayList<Aluno>();
+		
+		for (int i=0; i<turma_alunos.size(); i++)
+			alunos.add(turma_alunos.get(i).getAluno());
 		
 		model.addAttribute("turma", turma);
+		model.addAttribute("alunos", alunos);
 		
 		return "turmas/alunos";
 	}
@@ -84,7 +96,7 @@ public class TurmaController {
 		
 		return "redirect:/turmas/" + id_turma + "/alunos";
 	}
-	
+
 	@GetMapping("/turmas/{id_turma}/alunos/{id_aluno}/remover")
 	public String salvarAlunoNaTurma(@PathVariable("id_turma") Long id_turma, @PathVariable("id_aluno") Long id_aluno) {		
 		Turma turma = turmaService.consultarTurma(id_turma);

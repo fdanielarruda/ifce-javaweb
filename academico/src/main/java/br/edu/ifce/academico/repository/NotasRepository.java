@@ -14,5 +14,9 @@ public interface NotasRepository extends JpaRepository<Nota, Long> {
 	
 	List<Nota> findByTurma(Turma turma);
 	
+	List<Nota> findByTurmaAndAluno(Turma turma, Aluno aluno);
+	
 	Nota findFirstByAlunoAndTurma(Aluno aluno, Turma turma);
+	
+	void deleteByAlunoAndTurma(Aluno aluno, Turma turma);
 }

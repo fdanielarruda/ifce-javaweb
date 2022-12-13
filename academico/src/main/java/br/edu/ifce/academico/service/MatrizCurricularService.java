@@ -31,4 +31,8 @@ public class MatrizCurricularService {
 	public void salvarMatriz(MatrizCurricular matriz) {
 		matrizRepository.save(matriz);
 	}
+	
+	public void remover(MatrizCurricular matriz) {
+		matrizRepository.delete(matriz);
+	}
 }
