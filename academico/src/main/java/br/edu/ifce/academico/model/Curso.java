@@ -20,7 +20,13 @@ public class Curso {
 	
 	@OneToMany(mappedBy = "curso")
 	private List<MatrizCurricular> matrizCurricular;
+	
+	@OneToMany(mappedBy = "curso")
+	private List<Aluno> alunos;
 
+	@OneToMany(mappedBy = "curso")
+	private List<Turma> turmas;
+	
 	public Long getId() {
 		return id;
 	}
@@ -39,5 +45,13 @@ public class Curso {
 	
 	public List<MatrizCurricular> getMatrizCurricular() {
 		return matrizCurricular;
+	}
+
+	public List<Aluno> getAlunos() {
+		return alunos;
+	}
+
+	public List<Turma> getTurmas() {
+		return turmas;
 	}
 }
