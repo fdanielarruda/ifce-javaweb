@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class GeralController {
 	
 	@GetMapping("/")
-	public String index() {
+	public String index() {	
 		return "geral/index";
 	}
 	

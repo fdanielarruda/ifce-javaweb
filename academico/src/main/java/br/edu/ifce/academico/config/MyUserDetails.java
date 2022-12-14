@@ -19,10 +19,14 @@ public class MyUserDetails implements UserDetailsService {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		Usuario u = usuarioService.buscarLogin(username);
 		
-		String[] authorities = new String[1];
-		authorities[0] = "ROLE_USER";
-		
-		return new User(u.getEmail(), u.getSenha(), AuthorityUtils.createAuthorityList(authorities));
+		if (u != null) {
+			String[] authorities = new String[1];
+			authorities[0] = "ROLE_USER";
+			
+			return new User(u.getNome(), u.getSenha(), AuthorityUtils.createAuthorityList(authorities));	
+		} else {
+			throw new UsernameNotFoundException("Usuário não encontrado");
+		}
 	}
 
 }
